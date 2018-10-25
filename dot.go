@@ -25,6 +25,14 @@ func Quad9() *net.Resolver {
 	return newResolver("dns.quad9.net", "9.9.9.9:853", "149.112.112.112:853")
 }
 
+// Google returns Resolver that uses Google Public DNS service on 8.8.8.8 and
+// 8.8.4.4 on port 853.
+//
+// See https://developers.google.com/speed/public-dns/ for details.
+func Google() *net.Resolver {
+	return newResolver("dns.google", "8.8.8.8:853", "8.8.4.4:853")
+}
+
 func newResolver(serverName string, addrs ...string) *net.Resolver {
 	if serverName == "" {
 		panic("dot: server name cannot be empty")
