@@ -38,7 +38,7 @@ func Google() *net.Resolver {
 //
 // See https://libredns.gr/ for details.
 func LibreOps() *net.Resolver {
-	return newResolver("dot.libredns.gr", "116.203.115.192:853")
+	return newResolver("dot.libredns.gr", "116.202.176.26:853")
 }
 
 func newResolver(serverName string, addrs ...string) *net.Resolver {
