@@ -33,12 +33,12 @@ func Google() *net.Resolver {
 	return newResolver("dns.google", "8.8.8.8:853", "8.8.4.4:853")
 }
 
-// LibreOps returns Resolver that uses LibreDNS service on 116.203.115.192 on
+// LibreOps returns Resolver that uses LibreDNS service on 116.202.176.26 on
 // port 853 operated by LibreOps.
 //
 // See https://libredns.gr/ for details.
 func LibreOps() *net.Resolver {
-	return newResolver("dot.libredns.gr", "116.203.115.192:853")
+	return newResolver("dot.libredns.gr", "116.202.176.26:853")
 }
 
 func newResolver(serverName string, addrs ...string) *net.Resolver {
