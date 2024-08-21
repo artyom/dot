@@ -4,8 +4,10 @@ package dot
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"math/rand"
 	"net"
+	"net/netip"
 	"time"
 )
 
@@ -41,12 +43,28 @@ func LibreOps() *net.Resolver {
 	return newResolver("dot.libredns.gr", "116.202.176.26:853")
 }
 
-func newResolver(serverName string, addrs ...string) *net.Resolver {
+// New creates and returns a new DNS-over-TLS (DoT) Resolver.
+//
+// It takes a server name for TLS verification and one or more IP:port
+// addresses of DoT servers.
+//
+// The returned Resolver uses a random selection of the provided addresses
+// for each DNS query.
+//
+// Example:
+//
+//	googlePublic, err := dot.New("dns.google", "8.8.8.8:853", "8.8.4.4:853")
+func New(serverName string, addrs ...string) (*net.Resolver, error) {
 	if serverName == "" {
-		panic("dot: server name cannot be empty")
+		return nil, errors.New("dot: server name cannot be empty")
 	}
 	if len(addrs) == 0 {
-		panic("dot: addrs cannot be empty")
+		return nil, errors.New("dot: addrs cannot be empty")
+	}
+	for _, addr := range addrs {
+		if _, err := netip.ParseAddrPort(addr); err != nil {
+			return nil, err
+		}
 	}
 	var d net.Dialer
 	cfg := &tls.Config{
@@ -64,5 +82,13 @@ func newResolver(serverName string, addrs ...string) *net.Resolver {
 			conn.(*net.TCPConn).SetKeepAlivePeriod(3 * time.Minute)
 			return tls.Client(conn, cfg), nil
 		},
+	}, nil
+}
+
+func newResolver(serverName string, addrs ...string) *net.Resolver {
+	r, err := New(serverName, addrs...)
+	if err != nil {
+		panic(err)
 	}
+	return r
 }
