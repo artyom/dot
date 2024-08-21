@@ -5,7 +5,7 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	"math/rand"
+	"math/rand/v2"
 	"net"
 	"net/netip"
 	"time"
@@ -74,7 +74,7 @@ func New(serverName string, addrs ...string) (*net.Resolver, error) {
 	return &net.Resolver{
 		PreferGo: true,
 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
-			conn, err := d.DialContext(ctx, "tcp", addrs[rand.Intn(len(addrs))])
+			conn, err := d.DialContext(ctx, "tcp", addrs[rand.IntN(len(addrs))])
 			if err != nil {
 				return nil, err
 			}
